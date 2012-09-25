@@ -9,7 +9,7 @@ function i18n( dict ){
 
     for( var i in dict ){
         if( dict.hasOwnProperty(i) ){
-            i18n._[i] = typeof dict[i] == 'string' ? [dict[i]] : dict[i];
+            i18n._[i] = dict[i];
         }
     }
 
@@ -28,10 +28,14 @@ i18n._ = function( key, len ){
         return txt;
     }
 
-    if( len === undefined || len < 0 ){
+    if( isNaN(len) || len < 0 ){
         len = 0;
     } else if( len > 2 ){
         len = 2;
+    }
+
+    if( txt.length === 2 && len === 1 ){
+        len = 0;
     }
 
     return txt[len] || txt[len-1] || txt[len-2];
