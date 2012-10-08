@@ -22,7 +22,7 @@ function i18n( dict ){
  * @return {string}
  */
 i18n._ = function( key, len ){
-    var txt = i18n._[key] || '';
+    var txt = i18n._[key] || key;
 
     if( typeof txt === "string" ){
         return txt;
