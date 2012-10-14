@@ -31,31 +31,51 @@
 
     };
 
+    /**
+     * @type {string}
+     * The wildcard for the counter in pluralize function
+     */
+    i18n.wildcard = '%d';
+
 
     /**
-     * returns the translated text
+     * Returns the translated text
      * @param {string} key The key for the text.
-     * @param {integer} [len] if passed, it will define which text will be returned. Empty, single or multiple.
      * @return {string}
      */
-    i18n._ = function(key, len) {
-        var txt = i18n._[key] || key;
+    i18n._ = function(key) {
+        return i18n._[key] || key;
+    };
 
-        if( typeof txt === "string" ){
-            return txt;
+    /**
+     * Depending on the number argument, it returns the right given text.
+     * This function was based in angular's directive: http://docs.angularjs.org/api/ng.directive:ngPluralize
+     *
+     * @param {object} options A key-value object with the number and its respective text
+     * @param {integer} [counter=0] The quantity to return the right text
+     * @param {integer} [offset=0] The substraction in the counter
+     * @return {string}
+     */
+    i18n.pluralize = function(options, counter, offset){
+        if( counter == 'one' && options.one !== undefined ){
+            return options.one;
         }
 
-        if( isNaN(len) || len < 0 ){
-            len = 0;
-        } else if( len > 2 ){
-            len = 2;
+        counter = parseInt(counter, 10);
+        offset = parseInt(offset, 10) || 0;
+        if(isNaN(counter)){
+            return options[0] || '';
         }
 
-        if( txt.length === 2 && len === 1 ){
-            len = 0;
+        counter -= offset;
+
+        if(counter === 1 && offset > 0 ){
+            return options['one'];
         }
 
-        return txt[len] || txt[len-1] || txt[len-2];
+        return (options[counter] !== undefined) ?
+            options[counter].replace(i18n.wildcard, counter) :
+            options.other ? options.other.replace(i18n.wildcard, counter) : '';
     };
 
     /** Defining it as global */
@@ -64,6 +84,10 @@
     /** Creating the alias. First, do the check to avoid conflicts */
     if ( window._ === undefined ){
         window._ = i18n._;
+    }
+
+    if( window.pluralize === undefined ){
+        window.pluralize = i18n.pluralize;
     }
 
 }(window));

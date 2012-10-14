@@ -6,6 +6,8 @@ test('Check if all necessary properties are functions', function(){
 	ok( typeof i18n === 'function', 'i18n is not a function' );
 	ok( typeof i18n._ === 'function', "i18n._ isn't a function" );
 	ok( typeof _ === 'function', "_ isn't a function" );
+	ok( typeof i18n.pluralize === 'function', "i18n.pluralize isn't a function" );
+	ok( typeof pluralize === 'function', "pluralize isn't a function" );
 });
 
 
@@ -100,64 +102,50 @@ test('Giving an inexistent key, it must return the given key', function(){
 
 });
 
-test('Testing with two arguments', function(){
+test('Testing the pluralize', function(){
 
-	equal( _.arr1, _('arr1') );
-	equal( _.arr1, _('arr1', 0) );
-	equal( _.arr1, _('arr1', 1) );
-	equal( _.arr1, _('arr1', 2) );
-	equal( _.arr1, _('arr1', -1) );
-	equal( _.arr1, _('arr1', NaN) );
+	var obj = {
+		'0' : 'Nothing',
+		'1' : 'One thing',
+		'2' : 'Two things',
+		'7' : 'Seven things',
+		'one' : 'Someone is seeing',
+		'other' : i18n.wildcard + ' things!'
+	};
 
-});
+	equal( obj[0], pluralize( obj, 0 ) );
+	equal( obj[1], pluralize( obj, 1 ) );
+	equal( obj[2], pluralize( obj, 2 ) );
+	equal( obj[7], pluralize( obj, 7 ) );
 
-test('Testing the plural', function(){
-
-	equal( _.arr2[0], _('arr2') );
-	equal( _.arr2[0], _('arr2', 0) );
-	equal( _.arr2[0], _('arr2', -1) );
-	equal( _.arr2[0], _('arr2', 1) );
-	equal( _.arr2[1], _('arr2', 2) );
-	equal( _.arr2[1], _('arr2', 3) );
-	equal( _.arr2[1], _('arr2', 100) );
-
-});
-
-test('Testing the Empty, single and multiple form', function(){
-
-	i18n({
-		'arr1' : ['Message one'],
-		'arr2' : ['Message two', 'Message two plural'],
-		'arr3' : ['Message three Empty', 'Message three single', 'Message three multiple']
-	});
-
-
-	equal( _.arr3[0], _('arr3') );
-	equal( _.arr3[0], _('arr3', 0) );
-	equal( _.arr3[1], _('arr3', 1) );
-	equal( _.arr3[2], _('arr3', 2) );
-	equal( _.arr3[2], _('arr3', 100) );
-
-	equal( _.arr3[0], _('arr3', -1) );
-
-
-});
-
-test('Testing an inexistent array', function(){
-
-	var arr = ['empty value', 'single value', 'multiple value'];
-
-	ok( typeof _(['Some text']) === 'string' );
-	equal( _(['Some text']), 'Some text' );
+	//offset
+	equal( obj[7], pluralize( obj, 9, 2 ) );
+	equal( obj[2], pluralize( obj, 4, 2 ) );
 	
-	equal( _( arr, 0 ), 'empty value' );
-	equal( _( arr, -1 ), 'empty value' );
-	equal( _( arr, NaN ), 'empty value' );
-	equal( _( arr, 'abc' ), 'empty value' );
+	//One
+	equal( obj['one'], pluralize( obj, 4, 3 ) );
+	equal( obj['one'], pluralize( obj, 'one' ) );
 
-	equal( _( arr, 1 ), 'single value' );
+	//others
+	var txt = obj['other'].replace( i18n.wildcard, -1 );
+	equal( txt, pluralize( obj, -1 ), '-1' );
 
-	equal( _( arr, 2 ), 'multiple value' );
-	equal( _( arr, 100 ), 'multiple value' );
+	txt = obj['other'].replace( i18n.wildcard, 8 );
+	equal( txt, pluralize( obj, 10, 2 ) );
+
+	txt = obj['other'].replace( i18n.wildcard, 100 );
+	equal( txt, pluralize( obj, 100 ) );
+
+	//Not numbers will always return zero
+	equal( obj[0], pluralize( obj, 'not number' ) );
+	equal( obj[0], pluralize( obj, NaN ) );
+	equal( obj[0], pluralize( obj, '' ) );
+	equal( obj[0], pluralize( obj, false ) );
+	equal( obj[0], pluralize( obj, true ) );
+	equal( obj[0], pluralize( obj, Infinity ) );
+	equal( obj[0], pluralize( obj, {} ) );
+
+	//offset as a negative number
+	throws( obj[7], pluralize( obj, 9, -2 ), 'Must throw an exception!' );
 
 });
