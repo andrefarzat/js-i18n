@@ -32,7 +32,7 @@ A helper to get the right text in quantities issues. Ex:
     	'1' : _('We only have one client'),
     	'2' : _('We have two clients'),
     	'7' : _('Seven! We have seven clients!'),
-    	'other' : _('WoW! We have %s clients!')
+    	'other' : _('WoW! We have %d clients!')
     }, qty);
 
 
@@ -43,3 +43,5 @@ The first parameter is an object which can contain:
 * The string 'other'. The default choice.
 
 obs: The first parameter must have the '0' and the 'other' properties.
+
+The wildcard '%d' is defined in i18n.wildcard property.
