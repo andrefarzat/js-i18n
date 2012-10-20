@@ -35,7 +35,7 @@
      * @type {string}
      * The wildcard for the counter in pluralize function
      */
-    i18n.wildcard = '%d';
+    i18n.wildcard = /%d/g;
 
 
     /**
