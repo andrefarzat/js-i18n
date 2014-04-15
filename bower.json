@@ -1,0 +1,24 @@
+{
+  "name": "i18n",
+  "version": "1.0",
+  "homepage": "https://github.com/andrefarzat/js-i18n",
+  "authors": [
+    "Andre Farzat <andrefarzat@gmail.com>"
+  ],
+  "description": "internationalization for javascript",
+  "main": "i18n.js",
+  "keywords": [
+    "i18n",
+    "internatiolaization",
+    "gettext",
+    "pluralize"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
