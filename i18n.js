@@ -3,7 +3,18 @@
  * Javascript library to apply internationalization.
  * @author André Farzat ( andrefarzat@gmail.com )
  */
-(function (window) {
+
+(function (root, factory) {
+
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([root], factory);
+    } else {
+        // Browser globals
+        root.i18n = factory(root);
+    }
+
+}(this, function (window) {
     "use strict";
 
     /**
@@ -78,16 +89,5 @@
             options.other ? options.other.replace(i18n.wildcard, counter) : '';
     };
 
-    /** Defining it as global */
-    window.i18n = i18n;
-
-    /** Creating the alias. First, do the check to avoid conflicts */
-    if ( window._ === undefined ){
-        window._ = i18n._;
-    }
-
-    if( window.pluralize === undefined ){
-        window.pluralize = i18n.pluralize;
-    }
-
-}(window));
+    return i18n;
+}));
